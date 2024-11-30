@@ -34,6 +34,10 @@ import { Postcomment } from './postcomments/entities/postcomment.entity';
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
         entities: [User, Post, Postcomment],
+        migrations: ["src/migrations/*.ts"],
+        cli: {
+        "migrationsDir": "src/migrations"
+      },
         synchronize: true,
       })   
     }),

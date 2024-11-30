@@ -8,8 +8,8 @@ type AuthLoginResponse {
 }
 
 input CreatePostInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  content: String!
+  title: String!
 }
 
 input CreatePostcommentInput {
@@ -32,8 +32,8 @@ type Mutation {
   createAccount(createUserInput: CreateUserInput!): User!
   createPost(createPostInput: CreatePostInput!): Post!
   createPostcomment(createPostcommentInput: CreatePostcommentInput!): Postcomment!
+  deletePost(id: String!): Boolean!
   login(loginUserInput: LoginUserInput!): AuthLoginResponse!
-  removePost(id: Int!): Post!
   removePostcomment(id: Int!): Postcomment!
   removeUserByEmail(email: String!): User!
   updatePost(updatePostInput: UpdatePostInput!): Post!
@@ -56,18 +56,18 @@ type Postcomment {
 }
 
 type Query {
+  getAllPosts: [Post!]!
   getAllUsers: [User!]!
+  getPostById(id: String!): Post!
   getUserByEmail(email: String!): User!
-  post(id: Int!): Post!
   postcomment(id: Int!): Postcomment!
   postcomments: [Postcomment!]!
-  posts: [Post!]!
 }
 
 input UpdatePostInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  content: String!
+  id: String!
+  title: String!
 }
 
 input UpdatePostcommentInput {

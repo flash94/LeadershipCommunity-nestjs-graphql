@@ -1,26 +1,52 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePostInput } from './dto/create-post.input';
 import { UpdatePostInput } from './dto/update-post.input';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Post } from './entities/post.entity';
+import { Repository } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class PostsService {
-  create(createPostInput: CreatePostInput) {
-    return 'This action adds a new post';
+  constructor(
+    @InjectRepository(Post)
+    private readonly postRepository : Repository<Post>,
+    @InjectRepository(User)
+    private readonly userRepository : Repository<User>,
+  ){}
+
+  getAllPosts(): Promise<Post[]> {
+    return this.postRepository.find({ relations: ['author', 'postcomments'] });
   }
 
-  findAll() {
-    return `This action returns all posts`;
+  getPostById(id: string): Promise<Post> {
+    return this.postRepository.findOne({
+      where: { id },
+      relations: ['author', 'postcomments'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async createPost(createPostDTO: CreatePostInput, userId: string): Promise<Post> {
+     //Find the user by ID
+    const author = await this.userRepository.findOne({ where: { id: userId} });
+    if (!author) {
+      throw new Error('Author not found');
+    }
+    const post = this.postRepository.create({
+      ...createPostDTO,
+      author
+    });
+    return this.postRepository.save(post);
   }
 
-  update(id: number, updatePostInput: UpdatePostInput) {
-    return `This action updates a #${id} post`;
+  async updatePost(updatePostDTO: UpdatePostInput): Promise<Post> {
+    const { id, ...updateData } = updatePostDTO;
+    await this.postRepository.update(id, updateData);
+    return this.getPostById(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async deletePost(id: string): Promise<boolean> {
+    const result = await this.postRepository.delete(id);
+    return result.affected > 0;
   }
 }
