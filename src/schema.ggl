@@ -1,0 +1,85 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuthLoginResponse {
+  access_token: String!
+  user: User!
+}
+
+input CreatePostInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreatePostcommentInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateUserInput {
+  email: String!
+  password: String!
+  username: String!
+}
+
+input LoginUserInput {
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  createAccount(createUserInput: CreateUserInput!): User!
+  createPost(createPostInput: CreatePostInput!): Post!
+  createPostcomment(createPostcommentInput: CreatePostcommentInput!): Postcomment!
+  login(loginUserInput: LoginUserInput!): AuthLoginResponse!
+  removePost(id: Int!): Post!
+  removePostcomment(id: Int!): Postcomment!
+  removeUserByEmail(email: String!): User!
+  updatePost(updatePostInput: UpdatePostInput!): Post!
+  updatePostcomment(updatePostcommentInput: UpdatePostcommentInput!): Postcomment!
+}
+
+type Post {
+  author: User!
+  content: String!
+  id: String!
+  postcomments: Postcomment!
+  title: String!
+}
+
+type Postcomment {
+  author: User!
+  content: String!
+  id: String!
+  post: Post!
+}
+
+type Query {
+  getAllUsers: [User!]!
+  getUserByEmail(email: String!): User!
+  post(id: Int!): Post!
+  postcomment(id: Int!): Postcomment!
+  postcomments: [Postcomment!]!
+  posts: [Post!]!
+}
+
+input UpdatePostInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdatePostcommentInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+type User {
+  email: String!
+  id: String!
+  postcomments: [Postcomment!]
+  posts: [Post!]
+  username: String!
+}
