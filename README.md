@@ -55,18 +55,27 @@ Ensure you have the following installed:
 
    ```
 
-2. **Install Dependencies**  
-   npm install
+2. **Install Dependencies**
+
+```bash
+ npm install
+```
 
 3. **Set Up Environment Variables**  
    Create a .env file in the project root with the following:
-   DB_HOST=localhost
-   DB_PORT=5432
-   DB_USERNAME=your_db_username
-   DB_PASSWORD=your_db_password
-   DB_NAME=leadership_blog
-   JWT_SECRET=your_jwt_secret
-   PORT=3000
 
-4. **Start the Application**  
-   npm run start:dev
+```bash
+ DB_HOST=localhost
+ DB_PORT=5432
+ DB_USERNAME=your_db_username
+ DB_PASSWORD=your_db_password
+ DB_NAME=leadership_blog
+ JWT_SECRET=your_jwt_secret
+
+```
+
+4. **Start the Application**
+
+```bash
+ npm run start:dev
+```
