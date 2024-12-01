@@ -13,8 +13,9 @@ input CreatePostInput {
 }
 
 input CreatePostcommentInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  authorId: String!
+  content: String!
+  postId: String!
 }
 
 input CreateUserInput {
@@ -31,37 +32,37 @@ input LoginUserInput {
 type Mutation {
   createAccount(createUserInput: CreateUserInput!): User!
   createPost(createPostInput: CreatePostInput!): Post!
-  createPostcomment(createPostcommentInput: CreatePostcommentInput!): Postcomment!
+  createPostComment(createPostCommentInput: CreatePostcommentInput!): Postcomment!
   deletePost(id: String!): Boolean!
   login(loginUserInput: LoginUserInput!): AuthLoginResponse!
-  removePostcomment(id: Int!): Postcomment!
+  removePostComment(id: String!): Postcomment!
   removeUserByEmail(email: String!): User!
   updatePost(updatePostInput: UpdatePostInput!): Post!
-  updatePostcomment(updatePostcommentInput: UpdatePostcommentInput!): Postcomment!
+  updatePostComment(updatePostCommentInput: UpdatePostcommentInput!): Postcomment!
 }
 
 type Post {
   author: User!
   content: String!
   id: String!
-  postcomments: Postcomment!
+  postcomments: Postcomment
   title: String!
 }
 
 type Postcomment {
   author: User!
-  content: String!
+  content: String
   id: String!
   post: Post!
 }
 
 type Query {
+  commentsByPost(postId: String!): [Postcomment!]!
   getAllPosts: [Post!]!
   getAllUsers: [User!]!
   getPostById(id: String!): Post!
+  getSingleCommentById(id: String!): Postcomment!
   getUserByEmail(email: String!): User!
-  postcomment(id: Int!): Postcomment!
-  postcomments: [Postcomment!]!
 }
 
 input UpdatePostInput {
@@ -71,9 +72,8 @@ input UpdatePostInput {
 }
 
 input UpdatePostcommentInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  content: String
+  id: String!
 }
 
 type User {

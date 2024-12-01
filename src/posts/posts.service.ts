@@ -15,12 +15,12 @@ export class PostsService {
     private readonly userRepository : Repository<User>,
   ){}
 
-  getAllPosts(): Promise<Post[]> {
-    return this.postRepository.find({ relations: ['author', 'postcomments'] });
+  async getAllPosts(): Promise<Post[]> {
+    return await this.postRepository.find({ relations: ['author', 'postcomments'] });
   }
 
-  getPostById(id: string): Promise<Post> {
-    return this.postRepository.findOne({
+  async getPostById(id: string): Promise<Post> {
+    return await this.postRepository.findOne({
       where: { id },
       relations: ['author', 'postcomments'],
     });

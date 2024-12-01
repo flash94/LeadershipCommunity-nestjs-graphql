@@ -25,6 +25,9 @@ export class UsersService {
     return this.usersRepository.findOneBy({email});
   }
 
+  getUserById(id: string) {
+    return this.usersRepository.findOneBy({id});
+  }
   // update(id: string, updateUserInput: UpdateUserInput) {
   //   return `This action updates a #${id} user`;
   // }

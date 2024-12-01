@@ -10,7 +10,7 @@ export class Postcomment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Field()
+  @Field({nullable: true})
   @Column()
   content: string;
 
