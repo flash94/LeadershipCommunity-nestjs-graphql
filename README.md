@@ -9,13 +9,11 @@ This is a simple **blogging platform** built using **NestJS**, **GraphQL**, and 
 ### **User Management**
 
 - Users can register, log in, and receive JWT tokens for authentication.
-- Unique validation for usernames and emails.
 
 ### **Post Management**
 
 - Users can create, update, and delete their posts.
 - Only authenticated users can perform write operations.
-- Users cannot create posts with duplicate titles.
 - Posts include title, content, and a reference to the author.
 
 ### **Comment Management**
