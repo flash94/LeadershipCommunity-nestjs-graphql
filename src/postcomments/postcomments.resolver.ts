@@ -27,21 +27,11 @@ export class PostcommentsResolver {
   @UseGuards(JwtAuthGuard)
   async createPostComment(
     @Args('createPostCommentInput') createPostCommentInput: CreatePostcommentInput,
-    @Context() context: any, // To get the userId from the JWT context
+    @Context() context: any,
   ): Promise<Postcomment> {
     const userId = context.req.user.userId;;
-    if (!userId) {
-      throw new UnauthorizedException('You must be logged in to comment');
-    }
-
-    // Check if the post exists
-    const post = await this.postService.getPostById(createPostCommentInput.postId);
-    if (!post) {
-      throw new Error('Post not found');
-    }
-
     // Create a comment with the logged-in user's ID
-    return this.postcommentsService.createComment({
+    return await this.postcommentsService.createComment({
       ...createPostCommentInput,
       authorId: userId,
     });
@@ -52,49 +42,20 @@ export class PostcommentsResolver {
   @UseGuards(JwtAuthGuard)
   async updatePostComment(
     @Args('updatePostCommentInput') updatePostCommentInput: UpdatePostcommentInput,
-    @Context() context: any, // To get the userId from the JWT context
+    @Context() context: any,
   ): Promise<Postcomment> {
     const userId = context.req.user.userId;;
-    if (!userId) {
-      throw new UnauthorizedException('You must be logged in to update a comment');
-    }
-
-    const postComment = await this.postcommentsService.getCommentById(updatePostCommentInput.id);
-    if (!postComment) {
-      throw new Error('Comment not found');
-    }
-
-    // Check if the logged-in user is the author of the comment
-    if (postComment.author.id !== userId) {
-      throw new UnauthorizedException('You can only update your own comments');
-    }
-
     // Proceed with updating the comment
-    return this.postcommentsService.updateComment(updatePostCommentInput.id, updatePostCommentInput);
+    return this.postcommentsService.updateComment(updatePostCommentInput.id, updatePostCommentInput, userId);
   }
 
   @Mutation(() => Postcomment)
   @UseGuards(JwtAuthGuard)
   async removePostComment(
     @Args('id') id: string,
-    @Context() context: any, // To get the userId from the JWT context
+    @Context() context: any,
   ){
     const userId = context.req.user.userId;;
-    if (!userId) {
-      throw new UnauthorizedException('You must be logged in to delete a comment');
-    }
-
-    const postComment = await this.postcommentsService.getCommentById(id);
-    if (!postComment) {
-      throw new Error('Comment not found');
-    }
-
-    // Check if the logged-in user is the author of the comment
-    if (postComment.author.id !== userId) {
-      throw new UnauthorizedException('You can only delete your own comments');
-    }
-
-    // Proceed with deleting the comment
     this.postcommentsService.deleteComment(id, userId);
     return `Post Comment with ID ${id} deleted successfully`;
   }

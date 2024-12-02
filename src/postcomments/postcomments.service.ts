@@ -19,6 +19,7 @@ export class PostcommentsService {
   ){}
 
   async createComment(createPostCommentInput: CreatePostcommentInput): Promise<Postcomment> {
+    // Check if the post exists
     const post = await this.postService.getPostById(createPostCommentInput.postId);
     if (!post) {
       throw new NotFoundException('Post not found');
@@ -26,7 +27,7 @@ export class PostcommentsService {
 
     const author = await this.userService.getUserById(createPostCommentInput.authorId);
     if (!author) {
-      throw new Error('Author not found');
+      throw new NotFoundException('Author not found');
     }
 
     const newPostComment = this.postCommentRepository.create({
@@ -34,12 +35,12 @@ export class PostcommentsService {
       author,
       post
     });
-    console.log('postComment', newPostComment)
-    const savedComment = this.postCommentRepository.save(newPostComment);
-    console.log('saved', savedComment)
-    //console.log('saved', savedComment.post.postcomments[0])
+    const savedComment = await this.postCommentRepository.save(newPostComment);
+    // Fetch the updated post with postcomments relation
+    //const updatedPost = await this.postService.getPostById(createPostCommentInput.postId);
+    //const x  = { ...savedComment, post: updatedPost };
+    //console.log('saved', x)
     return savedComment;
-    //return this.postCommentRepository.save(newPostComment);
   }
 
   async getCommentsByPost(postId: string): Promise<Postcomment[]> {
@@ -63,17 +64,32 @@ export class PostcommentsService {
   }
 
   // Update an existing comment
-  async updateComment(id: string, updatePostCommentInput: UpdatePostcommentInput): Promise<Postcomment> {
+  async updateComment(id: string, updatePostCommentInput: UpdatePostcommentInput, userId: string): Promise<Postcomment> {
     const comment = await this.getCommentById(id);
     if (!comment) {
       throw new NotFoundException('Comment not found');
     }
 
-  // Update comment details
-  comment.content = updatePostCommentInput.content || comment.content;
-  return this.postCommentRepository.save(comment);
-}
+    if (!userId) {
+      throw new UnauthorizedException('You must be logged in to update a comment');
+    }
 
+    const postComment = await this.getCommentById(updatePostCommentInput.id);
+    if (!postComment) {
+      throw new Error('Comment not found');
+    }
+
+    // Check if the logged-in user is the author of the comment
+    if (postComment.author.id !== userId) {
+      throw new UnauthorizedException('You can only update your own comments');
+    }
+
+    // Update comment details
+    comment.content = updatePostCommentInput.content || comment.content;
+    return this.postCommentRepository.save(comment);
+  }
+
+    // delete an existing comment
   async deleteComment(id: string, userId: string): Promise<boolean> {
     const comment = await this.postCommentRepository.findOne({
       where: { id },

@@ -45,7 +45,7 @@ type Post {
   author: User!
   content: String!
   id: String!
-  postcomments: Postcomment
+  postcomments: [Postcomment!]
   title: String!
 }
 

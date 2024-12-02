@@ -22,7 +22,7 @@ export class Post {
   @ManyToOne(() => User, (user) => user.posts, { eager: true, nullable: false })
   author: User;
 
-  @Field(()=> Postcomment, {nullable: true})
-  @OneToMany(() => Postcomment, (postcomment) => postcomment.post, {cascade: true})
+  @Field(()=> [Postcomment], {nullable: true})
+  @OneToMany(() => Postcomment, (postcomment) => postcomment.post, {eager: true, cascade: true})
   postcomments: Postcomment[];
 }

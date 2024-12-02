@@ -15,7 +15,7 @@ export class Postcomment {
   content: string;
 
   @Field(() => User) // Relates the comment to its author
-  @ManyToOne(() => User, (user) => user.postcomments)
+  @ManyToOne(() => User, (user) => user.postcomments, {eager:true} )
   author: User;
 
   @Field(() => Post) // Relates the comment to its post
